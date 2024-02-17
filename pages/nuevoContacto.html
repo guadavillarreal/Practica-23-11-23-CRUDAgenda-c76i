@@ -42,19 +42,19 @@
             <form>
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombres</label>
-                    <input type="text" id="nombre" class="form-control" placeholder="Ej: Juan perez">
+                    <input type="text" id="nombre" class="form-control" placeholder="Ej: Juan" minlength="3" maxlength="30" required>
                 </div>
                 <div class="mb-3">
                     <label for="apellido" class="form-label">Apellidos</label>
-                    <input type="text" id="apellido" class="form-control" placeholder="Ej: Juan perez">
+                    <input type="text" id="apellido" class="form-control" placeholder="Ej: Perez" minlength="3" maxlength="30">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" id="email" class="form-control" placeholder="Ej: Juan perez">
+                    <input type="text" id="email" class="form-control" placeholder="Ej: Juanperez@email.com" minlength="12" maxlength="50" required>
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Telefono</label>
-                    <input type="text" id="telefono" class="form-control" placeholder="Ej: Juan perez">
+                    <input type="text" id="telefono" class="form-control" placeholder="Ej: 11 5458996" minlength="8" maxlength="30" required>
                 </div>
                 <button class="btn btn-primary" type="submit">Agregar</button>
                 <button class="btn btn-secondary" type="button">Volver</button>
