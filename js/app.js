@@ -1,3 +1,4 @@
+//CRUD: CREATE - READ - UPDATE - DELETE . CRUD DE CONTACTOS
 /*ESTRUCTURA DEL CODIGO! TODOS LOS IMPORT ARRIBA, VARIABLES GLOBALES , FUNCIONES, LOGICA EXTRAS! */
 
 //para utilizar una clase(por ej) que esta en otro arch en este puedo utilizar MODULOS, tambien puedo instalar y configurar para poder realizarlo
@@ -35,6 +36,11 @@ const nombre = document.getElementById('nombre');
 const apellido = document.getElementById('apellido');
 const email = document.getElementById('email');
 const telefono = document.getElementById('telefono');
+//otra forma de crear las variables podria ser, es decir sis ";" y solo "," lo que tomaria que las var q voy declarando seguido son del mismo tipo
+/*const nombre = document.getElementById('nombre'),
+apellido = document.getElementById('apellido'),*/
+//declaro un array para ir guardando mis contactos
+const agenda = [];
 
 /*FUNCIONES */
 
@@ -44,13 +50,15 @@ const mostrarModal = ()=>{
     modalAdminContacto.show();
 }
 const crearContacto =(e)=>{
-    /*agrego cmo param event para que pueda recolectar los datos del form al realizar el evento submi */
+    /*agrego cmo param event-SIEMPRE SE USA CON EL FORM- para que no se refresque la pestaña y pueda recolectar los datos del form al realizar el evento submi */
     e.preventDefault();
     console.log('aqui debo crear el contacto nuevo');
     //verificar que los datos sean validos
     //creo un nuevo contacto
     const nuevoContacto = new Contacto (undefined, nombre.value, apellido.value, email.value, telefono.value);
     console.log(nuevoContacto);
+    //guardo el contacto creado en la sig posicion del array
+    agenda.push(nuevoContacto);
     
     //resetear el formulario
 
