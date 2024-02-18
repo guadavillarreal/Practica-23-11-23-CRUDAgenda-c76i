@@ -1,4 +1,5 @@
-class Contacto{
+//export default: indica que solo exporto esto del arch
+export default class Contacto{
     #id;
     #nombre;
     #apellido;
