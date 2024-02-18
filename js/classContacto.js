@@ -40,4 +40,16 @@ export default class Contacto{
     set celular(nuevoCelular){
         this.#celular = nuevoCelular;
     }
+    //este metodo sirve para el objeto JSON.stringify-para poder acceder a las prop privados
+    toJSON(){
+        return{
+            //id sin el # es el get de la prop
+            id: this.id,
+            nombre: this.nombre,
+            apellido: this.apellido,
+            email: this.email,
+            celular: this.celular,
+        }
+    }
+
 }
