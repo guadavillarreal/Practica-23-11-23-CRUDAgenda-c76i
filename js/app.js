@@ -48,7 +48,7 @@ lo tengo que convertirlo a loq era anteriormente- con parse-*/
 //46: trae los datos y convertilos en lo que eran O si no tiene datos inicializalo vacio
 const agenda = JSON.parse(localStorage.getItem("agendaKey")) || [];
 
-/*FUNCIONES */
+/*----------------------FUNCIONES----------------------------*/
 
 //funcion en flecha
 const mostrarModal = () => {
@@ -114,7 +114,7 @@ function crearFila(contacto, fila) {
   const tablaContactos = document.querySelector("tbody");
   /*utilizo el innerHTML para evitar muchas lineas de codigo-q generaria el document.createHTML
     y uso el += para concatenar lo que ya tiene mas loq ingreso */
-  tablaContactos.innerHTML += `
+  tablaContactos.innerHTML += `</tr>
     <th scope="row">${fila}</th>
     <td>${contacto.nombre}</td>
     <td>${contacto.apellido}</td>
@@ -122,9 +122,15 @@ function crearFila(contacto, fila) {
     <td>${contacto.celular}</td>
     <td>
       <button class="btn btn-warning">Editar</button>
-      <button class="btn btn-danger">Borrar</button>
+      <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
     </td>
-  </tr>`;
+  </tr>`
+  /*-onclick="borrarContacto('${contacto.id}')"-se le agrega la func onclick para que desde el HTML llame la cuncion, pero al ser ahora un arch 
+  type="module" hay que llamarlo desde un un obj de orden mayor como es el obj "window"
+  <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
+  (idContacto): el param que recibo del obj contacto-parte del obj que recibi
+  Func con obj de orden superior: -window.borrarContacto = (idContacto) =>{..}-
+  */
 }
 //creo una func para dibujar la tabla solo cuando hay datos
 //mapea mi agenda y si hay elem en la agenda llama a crearFila
@@ -135,9 +141,50 @@ function cargaInicial() {
         //se pasa como param -contacto- pq cargue loq crea el el us al completar el fomr-L100 func crearFila
         //map solo suele utilizar un solo param,porq el segundo representa la posicion del elem en el array, lo que utilizo para el id de la fila, y como el array empieza en 0 debo agregarle un +1 para que empice en 1
         //recorre el array y va creando los item en la agenda-seria lo mismo que recorrerlo con un for
-        agenda.map((itemcontacto, posicion)=> crearFila(itemcontacto, posicion+1));
+        //elijo map por no realizar un for
+        agenda.map((itemcontacto, posicion)=> crearFila(itemcontacto, posicion + 1));
+/*         //ejemplo de hacer lo mismo de map con for
+        //donde envez de trabajar con el obj se trabaja con el array en cada posicion
+        const tablaContactos = document.querySelector("tbody");
+        for (let i = 0; i < agenda.length; i++) {
+          tablaContactos.innerHTML += `</tr>
+          <th scope="row">${i}</th>
+          <td>${agenda[i].nombre}</td>
+          <td>${agenda[i].apellido}</td>
+          <td>${agenda[i].email}</td>
+          <td>${agenda[i].celular}</td>
+          <td>
+            <button class="btn btn-warning">Editar</button>
+            <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
+          </td>
+        </tr>`
+        } */
     }
     //agregar cartel info p el us:-no existen datos xej
+}
+//se crea la una func con un obj de orden superior para asi poder llamarla desde el HTML siendo la jS MODULE
+//idContacto param que recibo de la llamada , solo un valor no el obj completo por eso no esta como contacto.id
+//siempre para que func correctamente se debe de crear un id-unico para que se pueda identificar especificamente el elem q quiero modificar- puedo utilizar el elem -crypto.randomUUID()-
+window.borrarContacto = (idContacto) =>{
+  console.log('desde la func borrarContacto');
+  console.log(idContacto);
+  //buscar en el array el obj que tiene este idContacto con array.findIndex en el array de contacto
+  /*Creo una const p guardar loq devuelve la func findIndex 
+  agenda es el array ----------------- itemContacto es cada elem del array
+  agenda.findIndex: llamo al obj-array donde lo voy a buscar,y va siempre con una func anonima
+  itemcontacto: param q utilizo para la busqueda,loq representa cada obj del array
+   */
+  const posicionContactoBuscado = agenda.findIndex((itemContacto)=> itemContacto.id === idContacto );
+  //si me sale -1 quiere decir que tiene un error
+  console.log(posicionContactoBuscado);
+
+  //borrar el obj del array usando splice(posicion del obj, cuantos borro)-- borra el elem de la posicion que le paso y la canidad que le paso
+  agenda.splice(posicionContactoBuscado,1);
+
+  //actualizar el localStorage-pq cuando borre algo se actualice mi localStorage porq asi no queda guardado algo q no tengo en la agenda-obj
+  //llama a la func
+  guardarEneLocalstorage();
+  //borrar una fila de la tabla
 }
 
 /*LOGICA DEL CODIGO */

@@ -5,8 +5,9 @@ export default class Contacto{
     #apellido;
     #email;
     #celular;
-    /*ol obj id lo inicializo en 1 para que si no lo pasan por param tengo un valor para asignarle */
-    constructor(id=1, nombre, apellido, email, celular){
+    /*ol obj id lo inicializo en 1 para que si no lo pasan por param tengo un valor para asignarle 
+    modifico el id=1 por -crypto.randomUUID()- es de una libreria nativa de JS que genera id alfanumericos unicos para cada obj*/
+    constructor(id= crypto.randomUUID(), nombre, apellido, email, celular){
         this.#id=id;
         this.#nombre= nombre;
         this.#apellido = apellido;
