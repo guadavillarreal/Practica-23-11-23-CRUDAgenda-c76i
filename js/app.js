@@ -82,6 +82,12 @@ const crearContacto = (e) => {
   crearFila(nuevoContacto,agenda.length);
   //para que se cierre cuando preciono el boton del modal-guardar-
   modalAdminContacto.hide();
+  //mostrar un msj al us que cargo todo correctamente--es un metodo creado para el cartel
+  Swal.fire({
+    title: "Contacto creado",
+    text: `El contacto ${nuevoContacto.nombre} fue creado correctamente`,
+    icon: "success"
+  });
 };
 //en este ej se desea crear func pequeñas que hagan cada una una actividad,por lo que en otra func creamos la func para limpiar el form
 //funcion
