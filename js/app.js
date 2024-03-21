@@ -76,6 +76,12 @@ const crearContacto = (e) => {
   limpiarFormulario();
   //guarda el el localStorage
   guardarEneLocalstorage();
+  //Dibujar una fila nueva cuando presiono el boton agregar nuevo contacto
+  //llama a la func crear fila para que la dibuje , solo le envio los param que estoy ingresando 
+  //nuevoContacto: param q estoy ingresando,agenda.length: la posicion con la que ingresara que es del largo del array de la agenda
+  crearFila(nuevoContacto,agenda.length);
+  //para que se cierre cuando preciono el boton del modal-guardar-
+  modalAdminContacto.hide();
 };
 //en este ej se desea crear func pequeñas que hagan cada una una actividad,por lo que en otra func creamos la func para limpiar el form
 //funcion
@@ -122,8 +128,10 @@ function cargaInicial() {
         //map representa xpantalla algo con cada elem del array-
         //se pasa como param -contacto- pq cargue loq crea el el us al completar el fomr-L100 func crearFila
         //map solo suele utilizar un solo param,porq el segundo representa la posicion del elem en el array, lo que utilizo para el id de la fila, y como el array empieza en 0 debo agregarle un +1 para que empice en 1
-        agenda.map((contacto, posicion)=> crearFila(contacto, posicion+1));
+        //recorre el array y va creando los item en la agenda-seria lo mismo que recorrerlo con un for
+        agenda.map((itemcontacto, posicion)=> crearFila(itemcontacto, posicion+1));
     }
+    //agregar cartel info p el us:-no existen datos xej
 }
 
 /*LOGICA DEL CODIGO */
