@@ -77,16 +77,16 @@ const crearContacto = (e) => {
   //guarda el el localStorage
   guardarEneLocalstorage();
   //Dibujar una fila nueva cuando presiono el boton agregar nuevo contacto
-  //llama a la func crear fila para que la dibuje , solo le envio los param que estoy ingresando 
+  //llama a la func crear fila para que la dibuje , solo le envio los param que estoy ingresando
   //nuevoContacto: param q estoy ingresando,agenda.length: la posicion con la que ingresara que es del largo del array de la agenda
-  crearFila(nuevoContacto,agenda.length);
+  crearFila(nuevoContacto, agenda.length);
   //para que se cierre cuando preciono el boton del modal-guardar-
   modalAdminContacto.hide();
   //mostrar un msj al us que cargo todo correctamente--es un metodo creado para el cartel
   Swal.fire({
     title: "Contacto creado",
     text: `El contacto ${nuevoContacto.nombre} fue creado correctamente`,
-    icon: "success"
+    icon: "success",
   });
 };
 //en este ej se desea crear func pequeñas que hagan cada una una actividad,por lo que en otra func creamos la func para limpiar el form
@@ -124,7 +124,7 @@ function crearFila(contacto, fila) {
       <button class="btn btn-warning">Editar</button>
       <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
     </td>
-  </tr>`
+  </tr>`;
   /*-onclick="borrarContacto('${contacto.id}')"-se le agrega la func onclick para que desde el HTML llame la cuncion, pero al ser ahora un arch 
   type="module" hay que llamarlo desde un un obj de orden mayor como es el obj "window"
   <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
@@ -135,15 +135,17 @@ function crearFila(contacto, fila) {
 //creo una func para dibujar la tabla solo cuando hay datos
 //mapea mi agenda y si hay elem en la agenda llama a crearFila
 function cargaInicial() {
-    //si la agenda tiene datos-es decir es mayor a cero- dibujo la agenda
-    if(agenda.length > 0){
-        //map representa xpantalla algo con cada elem del array-
-        //se pasa como param -contacto- pq cargue loq crea el el us al completar el fomr-L100 func crearFila
-        //map solo suele utilizar un solo param,porq el segundo representa la posicion del elem en el array, lo que utilizo para el id de la fila, y como el array empieza en 0 debo agregarle un +1 para que empice en 1
-        //recorre el array y va creando los item en la agenda-seria lo mismo que recorrerlo con un for
-        //elijo map por no realizar un for
-        agenda.map((itemcontacto, posicion)=> crearFila(itemcontacto, posicion + 1));
-/*         //ejemplo de hacer lo mismo de map con for
+  //si la agenda tiene datos-es decir es mayor a cero- dibujo la agenda
+  if (agenda.length > 0) {
+    //map representa xpantalla algo con cada elem del array-
+    //se pasa como param -contacto- pq cargue loq crea el el us al completar el fomr-L100 func crearFila
+    //map solo suele utilizar un solo param,porq el segundo representa la posicion del elem en el array, lo que utilizo para el id de la fila, y como el array empieza en 0 debo agregarle un +1 para que empice en 1
+    //recorre el array y va creando los item en la agenda-seria lo mismo que recorrerlo con un for
+    //elijo map por no realizar un for
+    agenda.map((itemcontacto, posicion) =>
+      crearFila(itemcontacto, posicion + 1)
+    );
+    /*         //ejemplo de hacer lo mismo de map con for
         //donde envez de trabajar con el obj se trabaja con el array en cada posicion
         const tablaContactos = document.querySelector("tbody");
         for (let i = 0; i < agenda.length; i++) {
@@ -159,14 +161,14 @@ function cargaInicial() {
           </td>
         </tr>`
         } */
-    }
-    //agregar cartel info p el us:-no existen datos xej
+  }
+  //agregar cartel info p el us:-no existen datos xej
 }
 //se crea la una func con un obj de orden superior para asi poder llamarla desde el HTML siendo la jS MODULE
 //idContacto param que recibo de la llamada , solo un valor no el obj completo por eso no esta como contacto.id
 //siempre para que func correctamente se debe de crear un id-unico para que se pueda identificar especificamente el elem q quiero modificar- puedo utilizar el elem -crypto.randomUUID()-
-window.borrarContacto = (idContacto) =>{
-  console.log('desde la func borrarContacto');
+window.borrarContacto = (idContacto) => {
+  console.log("desde la func borrarContacto");
   console.log(idContacto);
   //buscar en el array el obj que tiene este idContacto con array.findIndex en el array de contacto
   /*Creo una const p guardar loq devuelve la func findIndex 
@@ -174,18 +176,28 @@ window.borrarContacto = (idContacto) =>{
   agenda.findIndex: llamo al obj-array donde lo voy a buscar,y va siempre con una func anonima
   itemcontacto: param q utilizo para la busqueda,loq representa cada obj del array
    */
-  const posicionContactoBuscado = agenda.findIndex((itemContacto)=> itemContacto.id === idContacto );
+  const posicionContactoBuscado = agenda.findIndex(
+    (itemContacto) => itemContacto.id === idContacto
+  );
   //si me sale -1 quiere decir que tiene un error
   console.log(posicionContactoBuscado);
 
   //borrar el obj del array usando splice(posicion del obj, cuantos borro)-- borra el elem de la posicion que le paso y la canidad que le paso
   agenda.splice(posicionContactoBuscado,1);
 
-  //actualizar el localStorage-pq cuando borre algo se actualice mi localStorage porq asi no queda guardado algo q no tengo en la agenda-obj
   //llama a la func
+  //actualizar el localStorage-pq cuando borre algo se actualice mi localStorage porq asi no queda guardado algo q no tengo en la agenda-obj
   guardarEneLocalstorage();
-  //borrar una fila de la tabla
-}
+
+  //borrar una fila de la tabla utilizadon dele DOM, visualizamos quien es el padre para borrar el hijo- en este caso
+  /*Creo una var p almacenar-obtener- el obj buscado que esta dentro del obj padre */
+  const tablaContactos = document.querySelector('tbody');
+  //de la var q cree invoco a la func "childrem" para que se posicione enel item que busque -posicionContactoBuscado-
+  //sintaxis - objeto.propiedad[posicionarray]
+  console.log(tablaContactos.children[posicionContactoBuscado]);
+  //con la prop de removeChild borro el nodo hijo-item que quiero eliminar-
+  tablaContactos.removeChild(tablaContactos.children[posicionContactoBuscado]);
+};
 
 /*LOGICA DEL CODIGO */
 
