@@ -83,6 +83,7 @@ const crearContacto = (e) => {
   //para que se cierre cuando preciono el boton del modal-guardar-
   modalAdminContacto.hide();
   //mostrar un msj al us que cargo todo correctamente--es un metodo creado para el cartel
+  //modal sacado de sweetalert solo lo parametrizo ppara mi ejemplo
   Swal.fire({
     title: "Contacto creado",
     text: `El contacto ${nuevoContacto.nombre} fue creado correctamente`,
@@ -114,7 +115,7 @@ function crearFila(contacto, fila) {
   const tablaContactos = document.querySelector("tbody");
   /*utilizo el innerHTML para evitar muchas lineas de codigo-q generaria el document.createHTML
     y uso el += para concatenar lo que ya tiene mas loq ingreso */
-  tablaContactos.innerHTML += `</tr>
+  tablaContactos.innerHTML += `<tr>
     <th scope="row">${fila}</th>
     <td>${contacto.nombre}</td>
     <td>${contacto.apellido}</td>
