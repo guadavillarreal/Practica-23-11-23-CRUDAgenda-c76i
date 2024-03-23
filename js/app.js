@@ -52,6 +52,8 @@ const agenda = JSON.parse(localStorage.getItem("agendaKey")) || [];
 
 //funcion en flecha
 const mostrarModal = () => {
+  //lamo ala func para limpiar el form una vez que cierro la ventana modal por mas que lo complete o no
+  limpiarFormulario();
   /*L:25-- modalAdminContacto.show();-- hace que se abra la ventana automaticamente al cargar la pag*/
   modalAdminContacto.show();
 };
@@ -122,7 +124,7 @@ function crearFila(contacto, fila) {
     <td>${contacto.email}</td>
     <td>${contacto.celular}</td>
     <td>
-      <button class="btn btn-warning">Editar</button>
+      <button class="btn btn-warning" onclick="editarContacto('${contacto.id}')">Editar</button>
       <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
     </td>
   </tr>`;
@@ -147,57 +149,111 @@ function cargaInicial() {
       crearFila(itemcontacto, posicion + 1)
     );
     /*         //ejemplo de hacer lo mismo de map con for
-        //donde envez de trabajar con el obj se trabaja con el array en cada posicion
-        const tablaContactos = document.querySelector("tbody");
-        for (let i = 0; i < agenda.length; i++) {
-          tablaContactos.innerHTML += `</tr>
-          <th scope="row">${i}</th>
-          <td>${agenda[i].nombre}</td>
-          <td>${agenda[i].apellido}</td>
-          <td>${agenda[i].email}</td>
-          <td>${agenda[i].celular}</td>
-          <td>
-            <button class="btn btn-warning">Editar</button>
-            <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
-          </td>
-        </tr>`
-        } */
+    //donde envez de trabajar con el obj se trabaja con el array en cada posicion
+    const tablaContactos = document.querySelector("tbody");
+    for (let i = 0; i < agenda.length; i++) {
+      tablaContactos.innerHTML += `</tr>
+      <th scope="row">${i}</th>
+      <td>${agenda[i].nombre}</td>
+      <td>${agenda[i].apellido}</td>
+      <td>${agenda[i].email}</td>
+      <td>${agenda[i].celular}</td>
+      <td>
+      <button class="btn btn-warning">Editar</button>
+      <button class="btn btn-danger" onclick="borrarContacto('${contacto.id}')">Borrar</button>
+      </td>
+      </tr>`
+    } */
   }
   //agregar cartel info p el us:-no existen datos xej
 }
 //se crea la una func con un obj de orden superior para asi poder llamarla desde el HTML siendo la jS MODULE
 //idContacto param que recibo de la llamada , solo un valor no el obj completo por eso no esta como contacto.id
 //siempre para que func correctamente se debe de crear un id-unico para que se pueda identificar especificamente el elem q quiero modificar- puedo utilizar el elem -crypto.randomUUID()-
+//mapea mi agenda y si hay elem en la agenda llama a crearFila
 window.borrarContacto = (idContacto) => {
-  console.log("desde la func borrarContacto");
-  console.log(idContacto);
-  //buscar en el array el obj que tiene este idContacto con array.findIndex en el array de contacto
-  /*Creo una const p guardar loq devuelve la func findIndex 
+  //bloq del modal de conf p borrar- desde libreria externa sweettalert
+  Swal.fire({
+    title: "¿Estas seguro que quieres borrar?",
+    text: "No puedes revertir este paso",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Borrar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    //aqui agergo mi logica para borrar el contacto
+    console.log("desde la func borrarContacto");
+    console.log(idContacto);
+    //buscar en el array el obj que tiene este idContacto con array.findIndex en el array de contacto
+    /*Creo una const p guardar loq devuelve la func findIndex 
   agenda es el array ----------------- itemContacto es cada elem del array
   agenda.findIndex: llamo al obj-array donde lo voy a buscar,y va siempre con una func anonima
   itemcontacto: param q utilizo para la busqueda,loq representa cada obj del array
    */
+    const posicionContactoBuscado = agenda.findIndex(
+      (itemContacto) => itemContacto.id === idContacto
+    );
+    //si me sale -1 quiere decir que tiene un error
+    console.log(posicionContactoBuscado);
+
+    //borrar el obj del array usando splice(posicion del obj, cuantos borro)-- borra el elem de la posicion que le paso y la canidad que le paso
+    agenda.splice(posicionContactoBuscado, 1);
+
+    //llama a la func
+    //actualizar el localStorage-pq cuando borre algo se actualice mi localStorage porq asi no queda guardado algo q no tengo en la agenda-obj
+    guardarEneLocalstorage();
+
+    //borrar una fila de la tabla utilizadon dele DOM, visualizamos quien es el padre para borrar el hijo- en este caso
+    /*Creo una var p almacenar-obtener- el obj buscado que esta dentro del obj padre */
+    const tablaContactos = document.querySelector("tbody");
+    //de la var q cree invoco a la func "childrem" para que se posicione enel item que busque -posicionContactoBuscado-
+    //sintaxis - objeto.propiedad[posicionarray]
+    console.log(tablaContactos.children[posicionContactoBuscado]);
+    //con la prop de removeChild borro el nodo hijo-item que quiero eliminar-
+    tablaContactos.removeChild(
+      tablaContactos.children[posicionContactoBuscado]
+    );
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Contacto eliminado",
+        text: "El contacto fue eliminado exitosamente",
+        icon: "success",
+      });
+    }
+  });
+};
+//-------------------------------------------------------------
+// edicar contacto
+//se crea la una func con un obj de orden superior para asi poder llamarla desde el HTML siendo la jS MODULE
+window.editarContacto = (idContacto) => {
+  //da id del contacto
+  console.log(idContacto);
+
+  //busc elem xelem del obj agenda
   const posicionContactoBuscado = agenda.findIndex(
     (itemContacto) => itemContacto.id === idContacto
   );
-  //si me sale -1 quiere decir que tiene un error
+  //me da la posicion
   console.log(posicionContactoBuscado);
-
-  //borrar el obj del array usando splice(posicion del obj, cuantos borro)-- borra el elem de la posicion que le paso y la canidad que le paso
-  agenda.splice(posicionContactoBuscado,1);
-
-  //llama a la func
-  //actualizar el localStorage-pq cuando borre algo se actualice mi localStorage porq asi no queda guardado algo q no tengo en la agenda-obj
-  guardarEneLocalstorage();
-
-  //borrar una fila de la tabla utilizadon dele DOM, visualizamos quien es el padre para borrar el hijo- en este caso
-  /*Creo una var p almacenar-obtener- el obj buscado que esta dentro del obj padre */
-  const tablaContactos = document.querySelector('tbody');
-  //de la var q cree invoco a la func "childrem" para que se posicione enel item que busque -posicionContactoBuscado-
-  //sintaxis - objeto.propiedad[posicionarray]
+  //busco el padre para guardar la var
+  const tablaContactos = document.querySelector("tbody");
+  //muestro lo que encontre
   console.log(tablaContactos.children[posicionContactoBuscado]);
-  //con la prop de removeChild borro el nodo hijo-item que quiero eliminar-
-  tablaContactos.removeChild(tablaContactos.children[posicionContactoBuscado]);
+  //mostrar datos de la posicion del array donde estoy
+
+  //reescribo los valores
+  //--convierto lo que tengo en el localStorage en algo que pueda ver
+
+  // //uso splice para agregar un elemento en la posicion que obtuve
+  // agenda.splice(itemContacto,0,loquequieroAgregar);
+  // //abre el modal
+    // apellido = document("apellido"),
+    // celular = document.getElementById("celular"),
+    // email = document.getElementById("email");
+
+  modalAdminContacto.show();
 };
 
 /*LOGICA DEL CODIGO */
