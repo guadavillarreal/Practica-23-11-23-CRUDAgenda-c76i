@@ -60,7 +60,7 @@ const mostrarModal = () => {
 const crearContacto = (e) => {
   /*agrego cmo param event-SIEMPRE SE USA CON EL FORM- para que no se refresque la pestaña y pueda recolectar los datos del form al realizar el evento submi */
   e.preventDefault();
-  console.log("aqui debo crear el contacto nuevo");
+  //console.log("aqui debo crear el contacto nuevo");
   //verificar que los datos sean validos
   //creo un nuevo contacto
   const nuevoContacto = new Contacto(
@@ -73,7 +73,7 @@ const crearContacto = (e) => {
   //console.log(nuevoContacto);
   //guardo el contacto creado en la sig posicion del array
   agenda.push(nuevoContacto);
-  console.log(agenda);
+  //console.log(agenda);
   //resetear el formulario(es un metodo dele form)
   limpiarFormulario();
   //guarda el el localStorage
@@ -184,8 +184,8 @@ window.borrarContacto = (idContacto) => {
     cancelButtonText: "Cancelar",
   }).then((result) => {
     //aqui agergo mi logica para borrar el contacto
-    console.log("desde la func borrarContacto");
-    console.log(idContacto);
+    // console.log("desde la func borrarContacto");
+    //console.log(idContacto);
     //buscar en el array el obj que tiene este idContacto con array.findIndex en el array de contacto
     /*Creo una const p guardar loq devuelve la func findIndex 
   agenda es el array ----------------- itemContacto es cada elem del array
@@ -196,7 +196,7 @@ window.borrarContacto = (idContacto) => {
       (itemContacto) => itemContacto.id === idContacto
     );
     //si me sale -1 quiere decir que tiene un error
-    console.log(posicionContactoBuscado);
+    //console.log(posicionContactoBuscado);
 
     //borrar el obj del array usando splice(posicion del obj, cuantos borro)-- borra el elem de la posicion que le paso y la canidad que le paso
     agenda.splice(posicionContactoBuscado, 1);
@@ -226,34 +226,75 @@ window.borrarContacto = (idContacto) => {
 };
 //-------------------------------------------------------------
 // edicar contacto
-//se crea la una func con un obj de orden superior para asi poder llamarla desde el HTML siendo la jS MODULE
-window.editarContacto = (idContacto) => {
-  //da id del contacto
-  console.log(idContacto);
 
-  //busc elem xelem del obj agenda
-  const posicionContactoBuscado = agenda.findIndex(
+//----------------------------CHATGPT--------------------------
+// Función para cargar los datos del contacto en el modal
+const cargarDatosContacto = (contacto) => {
+  // Llenar los campos del formulario con los datos del contacto
+  nombre.value = contacto.nombre;
+  apellido.value = contacto.apellido;
+  email.value = contacto.email;
+  telefono.value = contacto.celular;
+};
+
+// Función para editar un contacto
+window.editarContacto = (idContacto) => {
+  // Encontrar el contacto en la agenda
+  const contactoEditar = agenda.find(
     (itemContacto) => itemContacto.id === idContacto
   );
-  //me da la posicion
-  console.log(posicionContactoBuscado);
-  //busco el padre para guardar la var
-  const tablaContactos = document.querySelector("tbody");
-  //muestro lo que encontre
-  console.log(tablaContactos.children[posicionContactoBuscado]);
-  //mostrar datos de la posicion del array donde estoy
 
-  //reescribo los valores
-  //--convierto lo que tengo en el localStorage en algo que pueda ver
+  if (contactoEditar) {
+    // Cargar los datos del contacto en el modal
+    console.log("ingreso del if" + contactoEditar);
+    cargarDatosContacto(contactoEditar);
 
-  // //uso splice para agregar un elemento en la posicion que obtuve
-  // agenda.splice(itemContacto,0,loquequieroAgregar);
-  // //abre el modal
-    // apellido = document("apellido"),
-    // celular = document.getElementById("celular"),
-    // email = document.getElementById("email");
+    // Mostrar el modal
+    modalAdminContacto.show();
 
-  modalAdminContacto.show();
+    // Evento para manejar la edición del contacto al enviar el formulario
+    formularioContacto.onsubmit = (e) => {
+      e.preventDefault(); // Evitar que el formulario se envíe
+
+      // Actualizar los datos del contacto con los valores del formulario
+      contactoEditar.nombre = nombre.value;
+      contactoEditar.apellido = apellido.value;
+      contactoEditar.email = email.value;
+      contactoEditar.telefono = telefono.value;
+
+      console.log("modificacion de contacto " +contactoEditar);
+
+      // agenda.splice(contactoEditar, 1, contactoEditar);
+      // console.log("salida del splice "+ contactoEditar);
+
+      agenda[idContacto] = contactoEditar;
+      
+      // Guardar los cambios en el localStorage
+      guardarEnLocalStorage();
+      
+      // Actualizar la fila del contacto en la tabla
+      actualizarFila(contactoEditar);
+      console.log(contactoEditar);
+      
+      // Cerrar el modal
+      modalAdminContacto.hide();
+
+      // Mostrar un mensaje de éxito
+      //no entra a la condicional, por lo que hay que verificar
+      Swal.fire({
+        title: "Contacto actualizado",
+        text: `Los cambios en el contacto ${contacto.nombre} han sido guardados correctamente`,
+        icon: "success",
+      });
+    };
+  } else {
+    // Mostrar un mensaje de error si no se encuentra el contacto
+    Swal.fire({
+      title: "Error",
+      text: "El contacto no pudo ser encontrado",
+      icon: "error",
+    });
+  }
 };
 
 /*LOGICA DEL CODIGO */
