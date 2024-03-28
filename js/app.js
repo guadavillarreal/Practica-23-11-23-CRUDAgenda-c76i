@@ -262,25 +262,25 @@ window.editarContacto = (idContacto) => {
       contactoEditar.email = email.value;
       contactoEditar.telefono = telefono.value;
 
-      console.log("modificacion de contacto " +contactoEditar);
+      console.log("modificacion de contacto " + contactoEditar);
 
       // agenda.splice(contactoEditar, 1, contactoEditar);
       // console.log("salida del splice "+ contactoEditar);
 
       agenda[idContacto] = contactoEditar;
-      
+
       // Guardar los cambios en el localStorage
       guardarEnLocalStorage();
-      
+
       // Actualizar la fila del contacto en la tabla
       actualizarFila(contactoEditar);
       console.log(contactoEditar);
-      
+
       // Cerrar el modal
       modalAdminContacto.hide();
-
       // Mostrar un mensaje de éxito
       //no entra a la condicional, por lo que hay que verificar
+      //bloque de msj del cambio
       Swal.fire({
         title: "Contacto actualizado",
         text: `Los cambios en el contacto ${contacto.nombre} han sido guardados correctamente`,
