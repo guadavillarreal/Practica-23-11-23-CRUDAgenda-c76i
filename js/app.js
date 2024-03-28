@@ -245,6 +245,7 @@ window.editarContacto = (idContacto) => {
   );
 
   if (contactoEditar) {
+    const indiceContacto = agenda.findIndex((itemContacto) => itemContacto.id === idContacto);
     // Cargar los datos del contacto en el modal
     console.log("ingreso del if" + contactoEditar);
     cargarDatosContacto(contactoEditar);
@@ -253,7 +254,7 @@ window.editarContacto = (idContacto) => {
     modalAdminContacto.show();
 
     // Evento para manejar la edición del contacto al enviar el formulario
-    formularioContacto.onsubmit = (e) => {
+    formularioContacto.addEventListener = (e)  => {
       e.preventDefault(); // Evitar que el formulario se envíe
 
       // Actualizar los datos del contacto con los valores del formulario
@@ -267,14 +268,12 @@ window.editarContacto = (idContacto) => {
       // agenda.splice(contactoEditar, 1, contactoEditar);
       // console.log("salida del splice "+ contactoEditar);
 
-      agenda[idContacto] = contactoEditar;
+      agenda[parseInt(indiceContacto)] = contactoEditar;
 
       // Guardar los cambios en el localStorage
       guardarEnLocalStorage();
 
-      // Actualizar la fila del contacto en la tabla
-      actualizarFila(contactoEditar);
-      console.log(contactoEditar);
+
 
       // Cerrar el modal
       modalAdminContacto.hide();
@@ -283,7 +282,7 @@ window.editarContacto = (idContacto) => {
       //bloque de msj del cambio
       Swal.fire({
         title: "Contacto actualizado",
-        text: `Los cambios en el contacto ${contacto.nombre} han sido guardados correctamente`,
+        text: `Los cambios en el contacto ${contactoEditar.nombre} han sido guardados correctamente`,
         icon: "success",
       });
     };
